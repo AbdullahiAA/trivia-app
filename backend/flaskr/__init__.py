@@ -1,4 +1,3 @@
-from locale import currency
 import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
@@ -98,7 +97,8 @@ def create_app(test_config=None):
         question.delete()
 
         return jsonify({
-            'status': True
+            'status': True,
+            'message': 'Question deleted successfully.'
         })
 
     """
@@ -111,6 +111,33 @@ def create_app(test_config=None):
     the form will clear and the question will appear at the end of the last page
     of the questions list in the "List" tab.
     """
+    @app.route('/questions', methods=['POST'])
+    def add_question():
+        question = request.json['question']
+        answer = request.json['answer']
+        difficulty = request.json['difficulty']
+        category = request.json['category']
+
+        # Handle when any of the field is not supplied
+        if question == None or answer == None or difficulty == None or category == None:
+            return jsonify({
+                'status': False,
+                'message': 'All fields are required'
+            })
+
+        new_question = Question(
+            question=question,
+            answer=answer,
+            difficulty=difficulty,
+            category=category
+        )
+
+        Question.insert(new_question)
+
+        return jsonify({
+            'status': True,
+            'message': 'Question added successfully',
+        })
 
     """
     @TODO:
