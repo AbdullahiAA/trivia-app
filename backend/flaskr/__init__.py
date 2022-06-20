@@ -1,3 +1,4 @@
+from locale import currency
 import os
 from flask import Flask, request, abort, jsonify
 from flask_sqlalchemy import SQLAlchemy
@@ -70,14 +71,13 @@ def create_app(test_config=None):
 
         formatted_questions = [question.format() for question in questions]
 
-        categories = get_categories()
-
         categories = [category.format() for category in Category.query.all()]
 
         return jsonify({
             'questions': formatted_questions[start:end],
             'totalQuestions': len(formatted_questions),
-            'categories': categories
+            'categories': categories,
+            # 'current_category': current_category
         })
 
     """
@@ -87,6 +87,19 @@ def create_app(test_config=None):
     TEST: When you click the trash icon next to a question, the question will be removed.
     This removal will persist in the database and when you refresh the page.
     """
+    @app.route('/questions/<int:question_id>', methods=['DELETE'])
+    def delete_question(question_id):
+        question = Question.query.get(question_id)
+
+        # Abort if no question is found
+        if question == None:
+            abort(404)
+
+        question.delete()
+
+        return jsonify({
+            'status': True
+        })
 
     """
     @TODO:
