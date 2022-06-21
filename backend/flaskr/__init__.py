@@ -98,7 +98,7 @@ def create_app(test_config=None):
 
         # Abort if no question is found
         if question == None:
-            abort(404)
+            abort(404, 'No Question')
 
         question.delete()
 
@@ -267,5 +267,37 @@ def create_app(test_config=None):
     Create error handlers for all expected errors
     including 404 and 422.
     """
+    @app.errorhandler(400)
+    def bad_request(_error):
+        return jsonify({
+            'status': False,
+            'error': 400,
+            'message': 'Bad request'
+        }), 400
+
+    @app.errorhandler(404)
+    def not_found(error, msg):
+        return jsonify({
+            'status': False,
+            'error': 404,
+            'message': 'Not found',
+            'msg': msg
+        }), 404
+
+    @app.errorhandler(422)
+    def unprocessable_entity(error):
+        return jsonify({
+            'status': False,
+            'error': 422,
+            'message': 'Unprocessable entity'
+        }), 422
+
+    @app.errorhandler(500)
+    def server_error(_error):
+        return jsonify({
+            'status': False,
+            'error': 500,
+            'message': 'Server error'
+        }), 500
 
     return app
