@@ -231,6 +231,40 @@ def create_app(test_config=None):
     one question at a time is displayed, the user is allowed to answer
     and shown whether they were correct or not.
     """
+    @app.route('/quizzes', methods=['POST'])
+    def get_quiz_question():
+        previous_questions = request.json['previous_questions']
+        quiz_category = request.json['quiz_category']
+
+        # Fetch all the questions if category is not specified
+        if quiz_category == None or quiz_category == "":
+            questions = Question.query.all()
+        else:
+            # Fetch questions based on category
+            questions = Question.query.filter_by(
+                category=quiz_category['id']).all()
+
+        available_questions = filter(
+            lambda q: q.id not in previous_questions, questions)
+        available_questions = list(available_questions)
+
+        if len(available_questions) == 0:
+            return jsonify({
+                'status': False,
+                'message': 'No questions available'
+            })
+
+        random_question = random.choice(available_questions)
+
+        print(questions)
+        print(available_questions)
+        print(random_question)
+
+        return jsonify({
+            'previous_questions': previous_questions,
+            'quiz_category': quiz_category,
+            'question': random_question.format(),
+        })
 
     """
     @TODO:

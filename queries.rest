@@ -35,3 +35,25 @@ Content-Type: application/json
 http://localhost:5000/categories/1/questions
 
 ###
+
+# Search questions 
+POST http://localhost:5000/questions/search
+Content-Type: application/json
+
+{
+    "searchTerm": "title"
+}
+
+###
+
+# Fetch quiz questions 
+POST http://localhost:5000/quizzes
+Content-Type: application/json
+
+{
+    "previous_questions": [16,17,18],
+    "quiz_category": { 
+        "id": 2,
+        "type": "Science"
+    }
+}
