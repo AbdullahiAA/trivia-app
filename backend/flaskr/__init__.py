@@ -244,6 +244,7 @@ def create_app(test_config=None):
             questions = Question.query.filter_by(
                 category=quiz_category['id']).all()
 
+        # Filter out the previous_questions
         available_questions = filter(
             lambda q: q.id not in previous_questions, questions)
         available_questions = list(available_questions)
@@ -254,16 +255,11 @@ def create_app(test_config=None):
                 'message': 'No questions available'
             })
 
+        # Choose a random question from the available questions
         random_question = random.choice(available_questions)
 
-        print(questions)
-        print(available_questions)
-        print(random_question)
-
         return jsonify({
-            'previous_questions': previous_questions,
-            'quiz_category': quiz_category,
-            'question': random_question.format(),
+            'question': random_question.format()
         })
 
     """
