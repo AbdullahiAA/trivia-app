@@ -4,6 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import random
 
+from sqlalchemy import func
+
 from models import setup_db, Question, Category
 
 QUESTIONS_PER_PAGE = 10
@@ -153,6 +155,28 @@ def create_app(test_config=None):
     only question that include that string within their question.
     Try using the word "title" to start.
     """
+    @app.route('/questions/search', methods=['POST'])
+    def search_questions():
+        search_term = request.json['searchTerm'].strip()
+
+        if search_term is None or search_term == "":
+            return jsonify({
+                'status': False,
+                'message': 'Please type something and try again'
+            })
+
+        related_questions = Question.query.filter(
+            func.lower(Question.question).like("%{}%".format(search_term.lower()))).all()
+
+        formatted_questions = [question.format()
+                               for question in related_questions]
+
+        return jsonify({
+            'message': search_term,
+            'questions': formatted_questions,
+            'total_questions': len(formatted_questions),
+            # 'current_category': current_category
+        })
 
     """
     @TODO:
@@ -163,7 +187,7 @@ def create_app(test_config=None):
     category to be shown.
     """
     @app.route('/categories/<int:category_id>/questions')
-    def get_question_by_category(category_id):
+    def get_questions_by_category(category_id):
         current_category = Category.query.get(category_id)
 
         # Handle when an invalid category is selected
@@ -172,6 +196,9 @@ def create_app(test_config=None):
                 'status': False,
                 'message': 'Unknown category selected'
             })
+        else:
+            # Format the current category
+            current_category = current_category.format()
 
         # Fetch the questions based on the category selected
         questions = Question.query.filter_by(
@@ -182,7 +209,7 @@ def create_app(test_config=None):
             return jsonify({
                 'questions': [],
                 'total_questions': 0,
-                'current_category': current_category.format()
+                'current_category': current_category
             })
 
         formatted_questions = [question.format() for question in questions]
@@ -190,7 +217,7 @@ def create_app(test_config=None):
         return jsonify({
             'questions': paginate_questions(request, formatted_questions),
             'total_questions': len(formatted_questions),
-            'current_category': current_category.format()
+            'current_category': current_category
         })
 
     """
