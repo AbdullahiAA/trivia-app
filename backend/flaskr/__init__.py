@@ -9,6 +9,15 @@ from models import setup_db, Question, Category
 QUESTIONS_PER_PAGE = 10
 
 
+def paginate_questions(request, questions):
+    # Calculate the start and the end of the questions based on the page
+    page = request.args.get('page', 1, type=int)
+    start = (page - 1) * QUESTIONS_PER_PAGE
+    end = start + QUESTIONS_PER_PAGE
+
+    return questions[start:end]
+
+
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)
@@ -63,18 +72,13 @@ def create_app(test_config=None):
     def get_questions():
         questions = Question.query.all()
 
-        # Calculate the start and the end of the questions based on the page
-        page = request.args.get('page', 1, type=int)
-        start = (page - 1) * QUESTIONS_PER_PAGE
-        end = start + QUESTIONS_PER_PAGE
-
         formatted_questions = [question.format() for question in questions]
 
         categories = [category.format() for category in Category.query.all()]
 
         return jsonify({
-            'questions': formatted_questions[start:end],
-            'totalQuestions': len(formatted_questions),
+            'questions': paginate_questions(request, formatted_questions),
+            'total_questions': len(formatted_questions),
             'categories': categories,
             # 'current_category': current_category
         })
@@ -158,6 +162,36 @@ def create_app(test_config=None):
     categories in the left column will cause only questions of that
     category to be shown.
     """
+    @app.route('/categories/<int:category_id>/questions')
+    def get_question_by_category(category_id):
+        current_category = Category.query.get(category_id)
+
+        # Handle when an invalid category is selected
+        if current_category == None:
+            return jsonify({
+                'status': False,
+                'message': 'Unknown category selected'
+            })
+
+        # Fetch the questions based on the category selected
+        questions = Question.query.filter_by(
+            category=category_id).all()
+
+        # Handle when the category selected has no questions
+        if questions == None:
+            return jsonify({
+                'questions': [],
+                'total_questions': 0,
+                'current_category': current_category.format()
+            })
+
+        formatted_questions = [question.format() for question in questions]
+
+        return jsonify({
+            'questions': paginate_questions(request, formatted_questions),
+            'total_questions': len(formatted_questions),
+            'current_category': current_category.format()
+        })
 
     """
     @TODO:
