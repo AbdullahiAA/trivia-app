@@ -20,6 +20,13 @@ def paginate_questions(request, questions):
     return questions[start:end]
 
 
+def format_category(categories):
+    category_list = [category.format() for category in categories]
+    formatted_categories = {cat['id']: cat['type'] for cat in category_list}
+
+    return formatted_categories
+
+
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)
@@ -28,21 +35,22 @@ def create_app(test_config=None):
     """
     @TODO: Set up CORS. Allow '*' for origins. Delete the sample route after completing the TODOs
     """
-    # cors = CORS(app, resources={r"*/api/*": {"origin": "*"}})
+    cors = CORS(app, resources={
+                r"*": {"origins": "*"}})
 
     """
     @TODO: Use the after_request decorator to set Access-Control-Allow
     """
-    # @app.after_request
-    # def after_request(response):
-    #     response.headers.add(
-    #         "Access-Control-Allow-Headers", "Content-Type, Authorization"
-    #     )
-    #     response.headers.add(
-    #         "Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS"
-    #     )
+    @app.after_request
+    def after_request(response):
+        response.headers.add(
+            "Access-Control-Allow-Headers", "Content-Type, Authorization"
+        )
+        response.headers.add(
+            "Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS"
+        )
 
-    #     return response
+        return response
 
     """
     @TODO:
@@ -52,7 +60,7 @@ def create_app(test_config=None):
     @app.route('/categories')
     def get_categories():
         categories = Category.query.all()
-        formatted_categories = [category.format() for category in categories]
+        formatted_categories = format_category(categories)
 
         return jsonify({
             'categories': formatted_categories
@@ -76,12 +84,13 @@ def create_app(test_config=None):
 
         formatted_questions = [question.format() for question in questions]
 
-        categories = [category.format() for category in Category.query.all()]
+        categories = Category.query.all()
+        formatted_categories = format_category(categories)
 
         return jsonify({
             'questions': paginate_questions(request, formatted_questions),
             'total_questions': len(formatted_questions),
-            'categories': categories,
+            'categories': formatted_categories,
             # 'current_category': current_category
         })
 
@@ -162,7 +171,9 @@ def create_app(test_config=None):
         if search_term is None or search_term == "":
             return jsonify({
                 'status': False,
-                'message': 'Please type something and try again'
+                'message': 'Please type something and try again',
+                'questions': [],
+                'total_questions': 0,
             })
 
         related_questions = Question.query.filter(
@@ -172,10 +183,8 @@ def create_app(test_config=None):
                                for question in related_questions]
 
         return jsonify({
-            'message': search_term,
             'questions': formatted_questions,
             'total_questions': len(formatted_questions),
-            # 'current_category': current_category
         })
 
     """
@@ -209,7 +218,7 @@ def create_app(test_config=None):
             return jsonify({
                 'questions': [],
                 'total_questions': 0,
-                'current_category': current_category
+                'current_category': current_category['type']
             })
 
         formatted_questions = [question.format() for question in questions]
@@ -217,7 +226,7 @@ def create_app(test_config=None):
         return jsonify({
             'questions': paginate_questions(request, formatted_questions),
             'total_questions': len(formatted_questions),
-            'current_category': current_category
+            'current_category': current_category['type']
         })
 
     """
@@ -237,7 +246,7 @@ def create_app(test_config=None):
         quiz_category = request.json['quiz_category']
 
         # Fetch all the questions if category is not specified
-        if quiz_category == None or quiz_category == "":
+        if quiz_category == None or quiz_category == "" or quiz_category['id'] == 0:
             questions = Question.query.all()
         else:
             # Fetch questions based on category
@@ -276,12 +285,11 @@ def create_app(test_config=None):
         }), 400
 
     @app.errorhandler(404)
-    def not_found(error, msg):
+    def not_found(error):
         return jsonify({
             'status': False,
             'error': 404,
             'message': 'Not found',
-            'msg': msg
         }), 404
 
     @app.errorhandler(422)
