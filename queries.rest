@@ -9,7 +9,7 @@ http://localhost:5000/categories
 ###
 
 # Fetch Questions route
-http://localhost:5000/questions?page=2
+http://localhost:5000/questions?page=3
 
 ###
 
@@ -23,8 +23,8 @@ POST http://localhost:5000/questions
 Content-Type: application/json
 
 {
-    "answer": "Engine",
-    "question": "What is that?",
+    "answer": "Gen. Muhammad Buhari",
+    "question": "What is the name of the president of Nigeria?",
     "difficulty": 1,
     "category": 4
 }
