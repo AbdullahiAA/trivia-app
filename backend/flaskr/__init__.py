@@ -147,7 +147,7 @@ def create_app(test_config=None):
             category=category
         )
 
-        Question.insert(new_question)
+        new_question.insert()
 
         return jsonify({
             'status': True,
