@@ -1,6 +1,6 @@
 # Trivia APP
 
-This project is one of the project that I'm proud for. Basically, this project is a platform that allows users to post differen questions based on different types of categories. i.e Science, Art, Entertainment, Sports and so on. This trivia app also allows users to attempt quizzes on there chosen category.
+This project is one of the projects that I'm proud of. Basically, this project is a platform that allows users to post different questions based on different types of categories. i.e Science, Art, Entertainment, Sports and so on. This trivia app also allows users to attempt quizzes on there chosen category or all the categories.
 
 ## Getting Started
 
