@@ -185,11 +185,13 @@ The API will return five error types when requests fail:
 }
 ```
 
+#### Add a new question
+
 #### POST /questions
 
 - General:
   - Creates a new question using the submitted question, answer, category ID and difficulty (Ranging from 1 - 5).
-- `curl http://127.0.0.1:5000/books?page=3 -X POST -H "Content-Type: application/json" -d '{"question": "What is the name of the president of Nigeria?", "answer": "Gen. Muhammad Buhari", "category": 4, "difficulty": 1}'`
+- `curl http://127.0.0.1:5000/questions?page=3 -X POST -H "Content-Type: application/json" -d '{"question": "What is the name of the president of Nigeria?", "answer": "Gen. Muhammad Buhari", "category": 4, "difficulty": 1}'`
 
 Body data
 
@@ -207,6 +209,63 @@ Response
 ```
 {
   "message": "Question added successfully.",
+  "status": true
+}
+```
+
+#### Search for question(s)
+
+#### POST /questions/search
+
+- General:
+  - Search for questions that matched the submitted search term.
+- `curl http://127.0.0.1:5000/questions/search -X POST -H "Content-Type: application/json" -d '{"searchTerm": "title"}'`
+
+Body data
+
+```
+{
+   "searchTerm": "title"
+}
+```
+
+Response
+
+```
+{
+  "questions": [
+    {
+      "answer": "Maya Angelou",
+      "category": 4,
+      "difficulty": 2,
+      "id": 5,
+      "question": "Whose autobiography is entitled 'I Know Why the Caged Bird Sings'?"
+    },
+    {
+      "answer": "Edward Scissorhands",
+      "category": 5,
+      "difficulty": 3,
+      "id": 6,
+      "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
+    }
+  ],
+  "total_questions": 2
+}
+```
+
+#### Delete a question
+
+#### DELETE /questions/{question_id}
+
+- General:
+  - Deletes the question of the given ID if it exists.
+- `curl -X DELETE http://127.0.0.1:5000/questions/23`
+
+Response
+
+```
+{
+  "message": "Question deleted successfully.",
   "status": true
 }
 ```
