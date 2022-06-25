@@ -306,7 +306,7 @@ Response
 
 ## Deployment N/A
 
-## Authors
+## Author
 
 Yours truly, Jelili Abdullahi
 

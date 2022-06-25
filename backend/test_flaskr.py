@@ -106,10 +106,10 @@ class TriviaTestCase(unittest.TestCase):
         # Get the deleted question
         question = Question.query.get(22)
 
-        # self.assertEqual(res.status_code, 200)
-        # self.assertEqual(data['status'], True)
-        # self.assertEqual(data['message'], 'Question deleted successfully.')
-        # self.assertEqual(question, None)
+        self.assertEqual(res.status_code, 200)
+        self.assertEqual(data['status'], True)
+        self.assertEqual(data['message'], 'Question deleted successfully.')
+        self.assertEqual(question, None)
 
     def test_404_delete_an_invalid_question(self):
         res = self.client().delete('/books/1000')
