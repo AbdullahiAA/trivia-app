@@ -146,7 +146,8 @@ The API will return five error types when requests fail:
 - General:
   - Creates a new question using the submitted question, answer, category ID and difficulty (Ranging from 1 - 5).
 - `curl http://127.0.0.1:5000/books?page=3 -X POST -H "Content-Type: application/json" -d '{"question": "What is the name of the president of Nigeria?", "answer": "Gen. Muhammad Buhari", "category": 4, "difficulty": 1}'`
-  Body data
+
+Body data
 
 ```
 {
