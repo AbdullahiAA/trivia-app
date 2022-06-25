@@ -243,14 +243,14 @@ def create_app(test_config=None):
         body = request.get_json()
 
         try:
-            previous_questions = body['previous_questions']
-            quiz_category = body['quiz_category']
+            previous_questions = body.get('previous_questions', None)
+            quiz_category = body.get('quiz_category', None)
 
             if previous_questions is None:
                 abort(404)
 
             # Fetch all the questions if category is not specified
-            if quiz_category == None or quiz_category == "" or quiz_category['id'] == 0:
+            if quiz_category == None:
                 questions = Question.query.all()
             else:
                 # Fetch questions based on category

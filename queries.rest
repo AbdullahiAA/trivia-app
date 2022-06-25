@@ -14,7 +14,7 @@ http://localhost:5000/questions?page=2
 ###
 
 # Delete Question route
-DELETE http://localhost:5000/questions/25
+DELETE http://localhost:5000/questions/35
 
 ###
 

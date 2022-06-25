@@ -270,6 +270,40 @@ Response
 }
 ```
 
+#### Fetch a quiz question
+
+#### POST /quizzes
+
+- General:
+  - Fetch a quiz question based on the choosing category or all categories if the `quiz_category` is not specified
+- `curl http://127.0.0.1:5000/questions/search -X POST -H "Content-Type: application/json" -d '{ "previous_questions": [1, 3, 18], "quiz_category": { "id": 5, "type": "Science" }}'`
+
+Body data
+
+```
+{
+    "previous_questions": [1, 3, 18],
+    "quiz_category": {
+        "id": 5,
+        "type": "Science"
+    }
+}
+```
+
+Response
+
+```
+{
+  "question": {
+    "answer": "Edward Scissorhands",
+    "category": 5,
+    "difficulty": 3,
+    "id": 6,
+    "question": "What was the title of the 1990 fantasy directed by Tim Burton about a young man with multi-bladed appendages?"
+  }
+}
+```
+
 ## Deployment N/A
 
 ## Authors
