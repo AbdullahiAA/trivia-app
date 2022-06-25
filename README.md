@@ -84,6 +84,8 @@ The API will return five error types when requests fail:
 - 422: Not Processable
 - 500: Server Error
 
+#### Fetch all the categories
+
 #### GET /categories
 
 - General:
@@ -102,6 +104,8 @@ The API will return five error types when requests fail:
   }
 }
 ```
+
+#### Fetch all the questions
 
 #### GET /questions
 
@@ -138,6 +142,46 @@ The API will return five error types when requests fail:
     }
   ],
   "total_questions": 23
+}
+```
+
+#### Fetch questions by category
+
+#### GET /categories/{category_id}/questions
+
+- General:
+  - Returns a list of questions based on the specified category.
+  - Results are paginated in groups of 10. Include a request argument to choose page number, starting from 1.
+- Sample: `curl http://127.0.0.1:5000/categories/1/questions`
+- Sample (including the page): `curl http://127.0.0.1:5000/categories/1/questions?page=2`
+
+```
+{
+  "current_category": "Science",
+  "questions": [
+    {
+      "answer": "The Liver",
+      "category": 1,
+      "difficulty": 4,
+      "id": 20,
+      "question": "What is the heaviest organ in the human body?"
+    },
+    {
+      "answer": "Alexander Fleming",
+      "category": 1,
+      "difficulty": 3,
+      "id": 21,
+      "question": "Who discovered penicillin?"
+    },
+    {
+      "answer": "Blood",
+      "category": 1,
+      "difficulty": 4,
+      "id": 22,
+      "question": "Hematology is a branch of medicine involving the study of what?"
+    }
+  ],
+  "total_questions": 3
 }
 ```
 
