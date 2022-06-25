@@ -123,28 +123,46 @@ The API will return five error types when requests fail:
   },
   "questions": [
     {
-      "answer": "Engine",
-      "category": 4,
-      "difficulty": 1,
-      "id": 35,
-      "question": "What is that?"
+      "answer": "Agra",
+      "category": 3,
+      "difficulty": 2,
+      "id": 15,
+      "question": "The Taj Mahal is located in which Indian city?"
     },
     {
-      "answer": "Gen. Muhammad Buhari",
-      "category": 4,
+      "answer": "Escher",
+      "category": 2,
       "difficulty": 1,
-      "id": 36,
-      "question": "What is the name of the president of Nigeria?"
-    },
-    {
-      "answer": "Gen. Muhammad Buhari",
-      "category": 4,
-      "difficulty": 1,
-      "id": 37,
-      "question": "What is the name of the president of Nigeria?"
+      "id": 16,
+      "question": "Which Dutch graphic artist\u2013initials M C was a creator of optical illusions?"
     }
   ],
   "total_questions": 23
+}
+```
+
+#### POST /questions
+
+- General:
+  - Creates a new question using the submitted question, answer, category ID and difficulty (Ranging from 1 - 5).
+- `curl http://127.0.0.1:5000/books?page=3 -X POST -H "Content-Type: application/json" -d '{"question": "What is the name of the president of Nigeria?", "answer": "Gen. Muhammad Buhari", "category": 4, "difficulty": 1}'`
+  Body data
+
+```
+{
+    "question": "What is the name of the president of Nigeria?",
+    "answer": "Gen. Muhammad Buhari",
+    "category": 4,
+    "difficulty": 1
+}
+```
+
+Response
+
+```
+{
+  "message": "Question added successfully.",
+  "status": true
 }
 ```
 
