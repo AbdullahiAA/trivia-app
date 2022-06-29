@@ -100,15 +100,16 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['message'], 'Not found')
 
     def test_delete_question(self):
-        res = self.client().delete('/questions/22')
+        res = self.client().delete('/questions/24')
         data = json.loads(res.data)
 
         # Get the deleted question
-        question = Question.query.get(22)
+        question = Question.query.get(24)
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['status'], True)
         self.assertEqual(data['message'], 'Question deleted successfully.')
+        self.assertEqual(data['question_id'], 24)
         self.assertEqual(question, None)
 
     def test_404_delete_an_invalid_question(self):

@@ -111,10 +111,12 @@ def create_app(test_config=None):
             abort(404)
 
         question.delete()
+        question = question.format()
 
         return jsonify({
             'status': True,
-            'message': 'Question deleted successfully.'
+            'message': 'Question deleted successfully.',
+            'question_id': question['id']
         })
 
     """
@@ -250,7 +252,7 @@ def create_app(test_config=None):
                 abort(404)
 
             # Fetch all the questions if category is not specified
-            if quiz_category == None:
+            if quiz_category == None or quiz_category['id'] == 0:
                 questions = Question.query.all()
             else:
                 # Fetch questions based on category
